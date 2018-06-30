@@ -11,6 +11,7 @@ self.addEventListener('install', function(event) {
                 '/js/dbhelper.js',
                 '/js/restaurant_info.js',
                 '/js/idb.js',
+                '/js/lazysizes.min.js',
                 '/css/styles-main.css',
                 '/css/styles.css'
                 //'/data/restaurants.json'
@@ -39,6 +40,7 @@ self.addEventListener('fetch', function(event) {
         return;
       }
       if (requestUrl.pathname.startsWith('/img/')) {
+        //console.log(requestUrl.href);
         event.respondWith(servePhoto(event.request));
         return;
       }
