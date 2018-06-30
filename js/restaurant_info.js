@@ -1,6 +1,14 @@
 let restaurant;
 var map;
 
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('sw.js').then(function() {
+    console.log('Registration worked!');
+  }).catch(function() {
+    console.log('Registration failed!');
+  });
+}
+
 /**
  * Initialize Google map, called from HTML.
  */
@@ -56,11 +64,11 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   address.innerHTML = restaurant.address;
 
   const imageMedium = document.getElementById('medium-restaurant-img');
-  imageMedium.srcset = DBHelper.imageUrlForRestaurant(restaurant).replace(".jpg","-1600_medium.jpg");
+  imageMedium.srcset = DBHelper.imageUrlForRestaurant(restaurant)+"-1600_medium.jpg";
 
   const image = document.getElementById('restaurant-img');
   image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant).replace(".jpg","-600_small.jpg");
+  image.src = DBHelper.imageUrlForRestaurant(restaurant)+"-600_small.jpg";
   image.alt = restaurant.photograph_alt;
 
   const cuisine = document.getElementById('restaurant-cuisine');

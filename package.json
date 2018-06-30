@@ -14,5 +14,8 @@
     "grunt-contrib-uglify": "^3.3.0",
     "grunt-mkdir": "^1.0.0",
     "grunt-responsive-images": "^1.10.1"
+  },
+  "dependencies": {
+    "vanilla-lazyload": "^8.7.1"
   }
 }

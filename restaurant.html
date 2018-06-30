@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
@@ -9,6 +9,8 @@
   <link rel="stylesheet" src="//normalize-css.googlecode.com/svn/trunk/normalize.css" />
   <!-- Main CSS file -->
   <link rel="stylesheet" href="css/styles.css" type="text/css">
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#f58500">
   <title>Restaurant Info</title>
 </head>
 
@@ -43,7 +45,6 @@
         <source id="medium-restaurant-img" media="(min-width: 800px)">
         <img id="restaurant-img">
       </picture>
-      <img id="restaurant-img">
       <p id="restaurant-cuisine"></p>
       <p id="restaurant-address"></p>
       <table id="restaurant-hours"></table>
@@ -65,6 +66,7 @@
 
   <!-- Beginning scripts -->
   <!-- Database helpers -->
+  <script src="js/idb.js"></script>
   <script type="text/javascript" src="js/dbhelper.js"></script>
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>

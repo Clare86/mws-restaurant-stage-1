@@ -151,12 +151,12 @@ createRestaurantHTML = (restaurant) => {
   
   const source = document.createElement('source');
   source.media = '(min-width: 800px)';
-  source.srcset = DBHelper.imageUrlForRestaurant(restaurant).replace(".jpg","-1600_medium.jpg");
+  source.setAttribute('data-srcset',DBHelper.imageUrlForRestaurant(restaurant)+"-600_small.jpg");
   picture.append(source);
 
   const image = document.createElement('img');
-  image.className = 'restaurant-img';
-  image.src = DBHelper.imageUrlForRestaurant(restaurant).replace(".jpg","-600_small.jpg");
+  image.className = 'restaurant-img lazyload';
+  image.setAttribute('data-src',DBHelper.imageUrlForRestaurant(restaurant)+"-250_thumbnail_small.jpg");
   image.alt = restaurant.photograph_alt;
   picture.append(image);
 

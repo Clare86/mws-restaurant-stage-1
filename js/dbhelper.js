@@ -2,33 +2,67 @@
  * Common database helper functions.
  */
 class DBHelper {
-
   /**
    * Database URL.
    * Change this to restaurants.json file location on your server.
    */
   static get DATABASE_URL() {
-    const port = 8000 // Change this to your server port
-    return `http://localhost:${port}/data/restaurants.json`;
+    /*const port = 8000 // Change this to your server port
+    return `http://localhost:${port}/data/restaurants.json`;*/
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/restaurants`;
   }
-
   /**
    * Fetch all restaurants.
    */
   static fetchRestaurants(callback) {
-    let xhr = new XMLHttpRequest();
-    xhr.open('GET', DBHelper.DATABASE_URL);
-    xhr.onload = () => {
-      if (xhr.status === 200) { // Got a success response from server!
-        const json = JSON.parse(xhr.responseText);
-        const restaurants = json.restaurants;
-        callback(null, restaurants);
-      } else { // Oops!. Got an error from server.
-        const error = (`Request failed. Returned status of ${xhr.status}`);
-        callback(error, null);
+    var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+      upgradeDb.createObjectStore('rdb', {
+        keyPath: 'id'
+      });
+    });
+    dbPromise.then(function(db) {
+      //console.log(db);
+      var tx = db.transaction('rdb');
+      var results = tx.objectStore('rdb').getAll();
+      //console.log(results);
+      return results;
+    }).then(function(allObjs){ 
+      if(allObjs.length>0){
+        callback(null, allObjs);
+      }else{
+        let xhr = new XMLHttpRequest();
+        xhr.open('GET', DBHelper.DATABASE_URL);
+        xhr.onload = () => {
+          if (xhr.status === 200) { // Got a success response from server!
+            const json = JSON.parse(xhr.responseText);
+            // var tx = db.transaction('rdb', 'readwrite');
+            // var store = tx.objectStore('rdb');
+            // json.forEach(restaurant => {
+            //   store.put(restaurant);
+            // });
+            var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+              upgradeDb.createObjectStore('rdb', {
+                keyPath: 'id'
+              });
+            });
+            dbPromise.then(function(db) {
+              var tx = db.transaction('rdb', 'readwrite');
+              var store = tx.objectStore('rdb');
+              json.forEach(restaurant => {
+                store.put(restaurant);
+              });
+            })
+            // console.log(json);
+            callback(null, json);
+          } else { // Oops!. Got an error from server.
+            const error = (`Request failed. Returned status of ${xhr.status}`);
+            callback(error, null);
+          }
+        };
+        xhr.send();
       }
-    };
-    xhr.send();
+    });
   }
 
   /**
@@ -40,6 +74,7 @@ class DBHelper {
       if (error) {
         callback(error, null);
       } else {
+        //console.log(restaurants);
         const restaurant = restaurants.find(r => r.id == id);
         if (restaurant) { // Got the restaurant
           callback(null, restaurant);
