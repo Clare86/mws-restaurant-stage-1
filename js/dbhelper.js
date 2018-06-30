@@ -31,36 +31,27 @@ class DBHelper {
       if(allObjs.length>0){
         callback(null, allObjs);
       }else{
-        let xhr = new XMLHttpRequest();
-        xhr.open('GET', DBHelper.DATABASE_URL);
-        xhr.onload = () => {
-          if (xhr.status === 200) { // Got a success response from server!
-            const json = JSON.parse(xhr.responseText);
-            // var tx = db.transaction('rdb', 'readwrite');
-            // var store = tx.objectStore('rdb');
-            // json.forEach(restaurant => {
-            //   store.put(restaurant);
-            // });
-            var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
-              upgradeDb.createObjectStore('rdb', {
-                keyPath: 'id'
-              });
+        fetch(DBHelper.DATABASE_URL, {
+        }).then(function (response) {
+            return response.json();
+        }).then(function(json){
+          var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+            upgradeDb.createObjectStore('rdb', {
+              keyPath: 'id'
             });
-            dbPromise.then(function(db) {
-              var tx = db.transaction('rdb', 'readwrite');
-              var store = tx.objectStore('rdb');
-              json.forEach(restaurant => {
-                store.put(restaurant);
-              });
-            })
-            // console.log(json);
-            callback(null, json);
-          } else { // Oops!. Got an error from server.
-            const error = (`Request failed. Returned status of ${xhr.status}`);
-            callback(error, null);
-          }
-        };
-        xhr.send();
+          });
+          dbPromise.then(function(db) {
+            var tx = db.transaction('rdb', 'readwrite');
+            var store = tx.objectStore('rdb');
+            json.forEach(restaurant => {
+              store.put(restaurant);
+            });
+          })
+          callback(null, json);
+        }).catch(function(e){
+          const error = (`Request failed. Returned status of ${e}`);
+          callback(error, null);
+        });
       }
     });
   }
