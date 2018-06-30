@@ -132,6 +132,14 @@ fillRestaurantsHTML = (restaurants = self.restaurants) => {
   addMarkersToMap();
 }
 
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('sw.js').then(function() {
+    console.log('Registration worked!');
+  }).catch(function() {
+    console.log('Registration failed!');
+  });
+}
+
 /**
  * Create restaurant HTML.
  */
@@ -140,7 +148,7 @@ createRestaurantHTML = (restaurant) => {
 
   const picture = document.createElement('picture');
   li.append(picture);
-  
+  console.log("Appending Restaurant");
   const source = document.createElement('source');
   source.media = '(min-width: 800px)';
   source.setAttribute('data-srcset',DBHelper.imageUrlForRestaurant(restaurant)+"-600_small.jpg");
@@ -148,7 +156,7 @@ createRestaurantHTML = (restaurant) => {
 
   const image = document.createElement('img');
   image.className = 'restaurant-img lazyload';
-  image.setAttribute('data-src',DBHelper.imageUrlForRestaurant(restaurant)+"-250_thumbnail_small.jpg");
+  image.setAttribute('data-src',DBHelper.imageUrlForRestaurant(restaurant)+"-250_thumbnail.jpg");
   image.alt = restaurant.photograph_alt;
   picture.append(image);
 

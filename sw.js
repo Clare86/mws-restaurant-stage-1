@@ -28,6 +28,10 @@ self.addEventListener('install', function(event) {
     )
 });
 
+self.addEventListener('activate', event => {
+  console.log('SW now ready to handle fetches!');
+});
+
 self.addEventListener('fetch', function(event) {
     /*console.log(event.request.url);*/
     
@@ -59,7 +63,8 @@ self.addEventListener('fetch', function(event) {
 });
 
 function servePhoto(request) {
-  var storageUrl = request.url.replace(/-\d+px\.jpg$/, '');
+  //var storageUrl = request.url.replace(/-\d+_[a-z]+\.jpg$/, '');
+  var storageUrl = request.url;
 
   return caches.open("content-imgs").then(function(cache) {
     return cache.match(storageUrl).then(function(response) {
@@ -107,32 +112,3 @@ function servePhoto(request) {
 //     });
 //   });
 // }
-
-/*self.addEventListener('install', function(event) {
-  // TODO: cache /skeleton rather than the root page
-  console.log("installing");
-  event.waitUntil(
-    caches.open('restaurants-2').then(function(cache) {
-      return cache.addAll([
-        '/',
-        'js/main.js',
-        'css/styles.css',
-        'data/restaurants.json'
-      ]);
-    })
-  );
-});
-
-self.addEventListener('activate', function(event) {
-    event.waitUntil(
-      caches.delete('restaurants-1')
-    );
-  });
-  
-  self.addEventListener('fetch', function(event) {
-    event.respondWith(
-      caches.match(event.request).then(function(response) {
-        return response || fetch(event.request);
-      })
-    );
-  });*/
