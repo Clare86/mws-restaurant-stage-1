@@ -80,6 +80,9 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   }
   // fill reviews
   fillReviewsHTML();
+  
+  const idElement = document.getElementById('restaurant-id');
+  idElement.value = restaurant.id;
 }
 
 /**
@@ -123,6 +126,26 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
   });
   container.appendChild(ul);
 }
+
+/**
+ * Create add review form.
+ */
+
+document.getElementById("submit-review").addEventListener("click", function(){
+  console.log("Button Pressed");
+  var username = document.getElementById('user-name').value;
+  var restaurantId = document.getElementById('restaurant-id').value;
+  var rating = document.getElementById('rating').value;
+  var comments = document.getElementById('comments').value;
+  var params = {
+    "restaurant_id": restaurantId,
+    "name": username,
+    "rating": rating,
+    "comments": comments
+  };
+  DBHelper.postReview(params);
+  console.log(params);
+});
 
 /**
  * Create review HTML and add it to the webpage.

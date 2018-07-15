@@ -190,16 +190,16 @@ nav h1 a {
   text-transform: uppercase;
 	width: 90%;
 }
-#restaurant-container, #reviews-container {
+#restaurant-container, #reviews-container, #add-review {
   border-bottom: 1px solid #d9d9d9;
   border-top: 1px solid #fff;
   padding: 30px 40px 30px;
   width: 100%;
 }
-#reviews-container {
+#reviews-container, #add-review {
   padding: 30px 40px 0;
 }
-#reviews-container h2 {
+#reviews-container h2, #add-review h2 {
   /*color: #f58500;*/
   color: #333;
   font-size: 24pt;

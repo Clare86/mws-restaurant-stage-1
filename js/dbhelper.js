@@ -193,4 +193,24 @@ class DBHelper {
     return marker;
   }
 
+  static postReview(params){
+    fetch('http://localhost:1337/reviews/', {
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (result) {
+          alert(result);
+      })
+      .catch (function (error) {
+          console.log('Request failed', error);
+      });
+  }
+
 }

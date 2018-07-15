@@ -203,16 +203,16 @@
       text-transform: uppercase;
       width: 90%;
     }
-    #restaurant-container, #reviews-container {
+    #restaurant-container, #reviews-container, #add-review {
       border-bottom: 1px solid #d9d9d9;
       border-top: 1px solid #fff;
       padding: 30px 40px 30px;
       width: 100%;
     }
-    #reviews-container {
+    #reviews-container, #add-review {
       padding: 30px 40px 0;
     }
-    #reviews-container h2 {
+    #reviews-container h2, #add-review h2 {
       /*color: #f58500;*/
       color: #333;
       font-size: 24pt;
@@ -350,6 +350,25 @@
       <ul id="reviews-list"></ul>
     </section>
     <!-- End reviews -->
+    <!-- Beginning add reviews -->
+    <section id="add-review">
+      <h2>Add Review</h2>
+      <label for="user-name">User Name</label><br>
+      <input type="text" name="user-name" id="user-name"><br>
+      <input type="hidden" name="restaurant-id" id="restaurant-id" value="">
+      <label for="rating">Rating</label><br>
+      <select name="rating" id="rating">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+      </select><br>
+      <label for="comments">Comments</label><br>
+      <textarea name="comments" id="comments" cols="30" rows="10"></textarea><br>
+      <button type="submit" id="submit-review">Submit Review</button>
+    </section>
+    <!-- End add reviews -->
   </main>
   <!-- End main -->
 
