@@ -154,7 +154,8 @@ fillReviewsHTML = (reviews = self.reviews) => {
  * Create add review form.
  */
 
-document.getElementById("submit-review").addEventListener("click", function(){
+document.getElementById("review-form").addEventListener("submit", function(event){
+  event.preventDefault()
   console.log("Button Pressed");
   var username = document.getElementById('user-name').value;
   var restaurantId = document.getElementById('restaurant-id').value;
@@ -257,3 +258,8 @@ document.getElementById("favourite").addEventListener("click", function(){
     }
   });
 })
+
+// document.getElementById("show-map").addEventListener("click", function(){
+//   var element = document.getElementById("map-container");
+//   element.innerHTML = '<div id="map" role="application" aria-label="Restaurants map"></div>';
+// })

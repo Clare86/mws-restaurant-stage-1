@@ -308,7 +308,7 @@
         z-index: 1000;
       }
       .inside #map-container {
-        background: blue none repeat scroll 0 0;
+        /* background: blue none repeat scroll 0 0; */
         height: 87%;
         position: fixed;
         right: 0;
@@ -367,7 +367,8 @@
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <h1 id="restaurant-name"></h1><span  aria-label="Toggle Restaurant in Favourites." id="favourite" class=""></span>
+      <h1 id="restaurant-name"></h1>
+      <span role="button" aria-label="Toggle Restaurant in Favourites." id="favourite" class=""></span>
       <picture>
         <source id="medium-restaurant-img" media="(min-width: 800px)">
         <img id="restaurant-img">
@@ -385,7 +386,7 @@
     <!-- Beginning add reviews -->
     <section id="add-review">
       <h2>Add Review</h2>
-      <div id="review-form">
+      <form id="review-form">
         <label for="user-name">User Name</label><br>
         <input type="text" name="user-name" id="user-name"><br>
         <input type="hidden" name="restaurant-id" id="restaurant-id" value="">
@@ -400,7 +401,7 @@
         <label for="comments">Comments</label><br>
         <textarea name="comments" id="comments" cols="30" rows="10"></textarea><br>
         <button type="submit" id="submit-review">Submit Review</button>
-      </div>
+      </form>
     </section>
     <!-- End add reviews -->
   </main>
