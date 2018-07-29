@@ -21,46 +21,6 @@ class DBHelper {
   /**
    * Fetch all restaurants.
    */
-  // static fetchRestaurants(callback) {
-  //   var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
-  //     upgradeDb.createObjectStore('rdb', {
-  //       keyPath: 'id'
-  //     });
-  //   });
-  //   dbPromise.then(function(db) {
-  //     //console.log(db);
-  //     var tx = db.transaction('rdb');
-  //     var results = tx.objectStore('rdb').getAll();
-  //     //console.log(results);
-  //     return results;
-  //   }).then(function(allObjs){ 
-  //     if(allObjs.length>0){
-  //       callback(null, allObjs);
-  //     }else{
-  //       fetch(DBHelper.DATABASE_URL, {
-  //       }).then(function (response) {
-  //           return response.json();
-  //       }).then(function(json){
-  //         var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
-  //           upgradeDb.createObjectStore('rdb', {
-  //             keyPath: 'id'
-  //           });
-  //         });
-  //         dbPromise.then(function(db) {
-  //           var tx = db.transaction('rdb', 'readwrite');
-  //           var store = tx.objectStore('rdb');
-  //           json.forEach(restaurant => {
-  //             store.put(restaurant);
-  //           });
-  //         })
-  //         callback(null, json);
-  //       }).catch(function(e){
-  //         const error = (`Request failed. Returned status of ${e}`);
-  //         callback(error, null);
-  //       });
-  //     }
-  //   });
-  // }
 
   static fetchRestaurants(callback) {
     fetch(DBHelper.DATABASE_URL, {
