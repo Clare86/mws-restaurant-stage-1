@@ -12,48 +12,127 @@ class DBHelper {
     const port = 1337 // Change this to your server port
     return `http://localhost:${port}/restaurants`;
   }
+  static get Reviews_URL() {
+    /*const port = 8000 // Change this to your server port
+    return `http://localhost:${port}/data/restaurants.json`;*/
+    const port = 1337 // Change this to your server port
+    return `http://localhost:${port}/reviews?restaurant_id=`;
+  }
   /**
    * Fetch all restaurants.
    */
+  // static fetchRestaurants(callback) {
+  //   var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+  //     upgradeDb.createObjectStore('rdb', {
+  //       keyPath: 'id'
+  //     });
+  //   });
+  //   dbPromise.then(function(db) {
+  //     //console.log(db);
+  //     var tx = db.transaction('rdb');
+  //     var results = tx.objectStore('rdb').getAll();
+  //     //console.log(results);
+  //     return results;
+  //   }).then(function(allObjs){ 
+  //     if(allObjs.length>0){
+  //       callback(null, allObjs);
+  //     }else{
+  //       fetch(DBHelper.DATABASE_URL, {
+  //       }).then(function (response) {
+  //           return response.json();
+  //       }).then(function(json){
+  //         var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+  //           upgradeDb.createObjectStore('rdb', {
+  //             keyPath: 'id'
+  //           });
+  //         });
+  //         dbPromise.then(function(db) {
+  //           var tx = db.transaction('rdb', 'readwrite');
+  //           var store = tx.objectStore('rdb');
+  //           json.forEach(restaurant => {
+  //             store.put(restaurant);
+  //           });
+  //         })
+  //         callback(null, json);
+  //       }).catch(function(e){
+  //         const error = (`Request failed. Returned status of ${e}`);
+  //         callback(error, null);
+  //       });
+  //     }
+  //   });
+  // }
+
   static fetchRestaurants(callback) {
-    var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
-      upgradeDb.createObjectStore('rdb', {
-        keyPath: 'id'
+    fetch(DBHelper.DATABASE_URL, {
+    }).then(function (response) {
+        return response.json();
+    }).then(function(json){
+      var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('rdb', {
+          keyPath: 'id'
+        });
+      });
+      dbPromise.then(function(db) {
+        var tx = db.transaction('rdb', 'readwrite');
+        var store = tx.objectStore('rdb');
+        json.forEach(restaurant => {
+          store.put(restaurant);
+        });
+      })
+      callback(null, json);
+    }).catch(function(e){
+      var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('rdb', {
+          keyPath: 'id'
+        });
+      });
+      dbPromise.then(function(db) {
+        var tx = db.transaction('rdb');
+        var results = tx.objectStore('rdb').getAll();
+        return results;
+      }).then(function(allObjs){ 
+        const error = (`Request failed. Returned status of ${e}`);
+        callback(error, allObjs);
       });
     });
-    dbPromise.then(function(db) {
-      //console.log(db);
-      var tx = db.transaction('rdb');
-      var results = tx.objectStore('rdb').getAll();
-      //console.log(results);
-      return results;
-    }).then(function(allObjs){ 
-      if(allObjs.length>0){
-        callback(null, allObjs);
-      }else{
-        fetch(DBHelper.DATABASE_URL, {
-        }).then(function (response) {
-            return response.json();
-        }).then(function(json){
-          var dbPromise = idb.open('rdb', 1, function(upgradeDb) {
-            upgradeDb.createObjectStore('rdb', {
-              keyPath: 'id'
-            });
-          });
-          dbPromise.then(function(db) {
-            var tx = db.transaction('rdb', 'readwrite');
-            var store = tx.objectStore('rdb');
-            json.forEach(restaurant => {
-              store.put(restaurant);
-            });
-          })
-          callback(null, json);
-        }).catch(function(e){
-          const error = (`Request failed. Returned status of ${e}`);
-          callback(error, null);
+  }
+
+  static fetchReviews(id,callback) {
+    fetch(DBHelper.Reviews_URL+id, {
+    }).then(function (response) {
+      return response.json();
+    }).then(function(json){
+      callback(null, json);
+      var dbPromise = idb.open('reviews', 1, function(upgradeDb) {
+        var reviewstore = upgradeDb.createObjectStore('reviews', {
+          keyPath: 'id'
         });
-      }
-    });
+        reviewstore.createIndex('restaurant', 'restaurant_id');
+      });
+      dbPromise.then(function(db) {
+        var tx = db.transaction('reviews', 'readwrite');
+        var store = tx.objectStore('reviews');
+        json.forEach(restaurant => {
+          store.put(restaurant);
+        });
+      })
+    }).catch(function(e){
+      var dbPromise = idb.open('reviews', 1, function(upgradeDb) {
+        var reviewstore = upgradeDb.createObjectStore('reviews', {
+          keyPath: 'id'
+        });
+        reviewstore.createIndex('restaurant', 'restaurant_id');
+      });
+      dbPromise.then(function(db) {
+        var tx = db.transaction('reviews');
+        var results = tx.objectStore('reviews');
+        var restaurantresults = results.index('restaurant').getAll(id);
+        return restaurantresults;
+      }).then(function(allObjs){ 
+        const error = (`Request failed. Returned status of ${e}`);
+        callback(error, allObjs);
+      });
+    }); 
   }
 
   /**
@@ -175,8 +254,8 @@ class DBHelper {
   /**
    * Restaurant image URL.
    */
-  static imageUrlForRestaurant(restaurant) {
-    return (`/img/${restaurant.photograph}`);
+  static imageUrlForRestaurant(photoId) {
+    return (`/img/${photoId}`);
   }
 
   /**
@@ -193,7 +272,7 @@ class DBHelper {
     return marker;
   }
 
-  static postReview(params){
+  static postReview(params, callback){
     fetch('http://localhost:1337/reviews/', {
       method: 'POST',
       headers: {
@@ -206,10 +285,76 @@ class DBHelper {
           return response.json();
       })
       .then(function (result) {
-          alert(result);
+        DBHelper.fetchReviews(params.restaurant_id,(error,reviews)=>{
+          if(!error){
+            console.log(reviews);
+            var result = reviews[reviews.length-1];
+            console.log(result);  
+            callback(null, result);
+          }
+        })
       })
       .catch (function (error) {
-          console.log('Request failed', error);
+        var dbPromise = idb.open('offline', 1, function(upgradeDb) {
+          var reviewstore = upgradeDb.createObjectStore('offline',{ keyPath: "id", autoIncrement:true });
+        });
+        dbPromise.then(function(db) {
+          var tx = db.transaction('offline', 'readwrite');
+          var store = tx.objectStore('offline');
+          store.add(params);
+        });
+        DBHelper.updateOnline(params);
+        console.log('Request failed', error);
+        callback("error",params)
+      });
+  }
+
+  static updateOnline(params){
+    var params = params;
+    window.addEventListener('online', function(params) { 
+      console.log("Back Online");
+      var dbPromise = idb.open('offline', 1, function(upgradeDb) {
+        upgradeDb.createObjectStore('offline',{ keyPath: "id", autoIncrement:true });
+      });
+      dbPromise.then(function(db) {
+        var tx = db.transaction('offline', 'readwrite');
+        var store = tx.objectStore('offline').getAll();
+        return store;
+      }).then(function(results){
+        results.forEach(review => {
+          delete review.id;
+          DBHelper.postReview(review,(error,review)=>{
+            if(!error){
+              alert("Hello "+review.name+", Your review has been submitted.");
+            }
+          })
+        })
+      }).then(function(){
+        var dbPromise = idb.open('offline', 1, function(upgradeDb) {
+          upgradeDb.createObjectStore('offline',{ keyPath: "id", autoIncrement:true });
+        });
+        dbPromise.then(function(db) {
+          var tx = db.transaction('offline', 'readwrite');
+          tx.objectStore('offline').clear();
+          return tx.complete;
+        })
+      });
+    });
+  }
+
+  static updateFavourite (id,update,callback){
+    fetch('http://localhost:1337/restaurants/'+id+'/?is_favorite='+update, {
+      method: 'PUT'
+      })
+      .then(function (response) {
+          return response.json();
+      })
+      .then(function (result) {
+        callback(null,update)
+      })
+      .catch (function (error) {
+        var error = "There was an error";
+        callback(error,null)
       });
   }
 

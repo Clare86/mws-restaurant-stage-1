@@ -180,9 +180,23 @@
       font-size: 20pt;
       font-weight: 200;
       letter-spacing: 0;
-      margin: 15px 0 30px;
+      margin: 15px 0 20px;
       text-transform: uppercase;
       line-height: 1.1;
+    }
+    #favourite {
+      display: inline-block;
+      font-size:15pt;
+      font-family: Arial,sans-serif;
+      border:#f18200 solid 2px;
+      border-radius: 5px;
+      line-height: 1.1;
+      padding: 5px;
+      margin: 0 0 20px;
+      cursor: pointer;
+    }
+    .f_true {
+      background-color: #f18200;
     }
     #restaurant-img {
       width: 90%;
@@ -267,6 +281,20 @@
       color:#303030;
       margin:10px 20px;
     }
+    #review-form {
+      background-color: #fff;
+      border: 2px solid #f3f3f3;
+      margin: 0 0 30px;
+      padding: 20px;
+      width: 100%;
+      font-size:17px;
+    }
+    #comments, #user-name {
+      width:100%;
+    }
+    #comments, #user-name, #rating, #submit-review {
+      font-size:17px;
+    }
     #restaurant-hours td {
       color: #666;
       font-size:16px;
@@ -302,6 +330,10 @@
         width: 50%;
       }
       #reviews-container {
+        padding: 30px 40px 20px;
+        width: 50%;
+      }
+      #add-review {
         padding: 30px 40px 80px;
         width: 50%;
       }
@@ -335,7 +367,7 @@
     <!-- End map -->
     <!-- Beginning restaurant -->
     <section id="restaurant-container">
-      <h1 id="restaurant-name"></h1>
+      <h1 id="restaurant-name"></h1><span  aria-label="Toggle Restaurant in Favourites." id="favourite" class=""></span>
       <picture>
         <source id="medium-restaurant-img" media="(min-width: 800px)">
         <img id="restaurant-img">
@@ -353,20 +385,22 @@
     <!-- Beginning add reviews -->
     <section id="add-review">
       <h2>Add Review</h2>
-      <label for="user-name">User Name</label><br>
-      <input type="text" name="user-name" id="user-name"><br>
-      <input type="hidden" name="restaurant-id" id="restaurant-id" value="">
-      <label for="rating">Rating</label><br>
-      <select name="rating" id="rating">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-      </select><br>
-      <label for="comments">Comments</label><br>
-      <textarea name="comments" id="comments" cols="30" rows="10"></textarea><br>
-      <button type="submit" id="submit-review">Submit Review</button>
+      <div id="review-form">
+        <label for="user-name">User Name</label><br>
+        <input type="text" name="user-name" id="user-name"><br>
+        <input type="hidden" name="restaurant-id" id="restaurant-id" value="">
+        <label for="rating">Rating</label><br>
+        <select name="rating" id="rating">
+          <option value="1">1</option>
+          <option value="2">2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5">5</option>
+        </select><br>
+        <label for="comments">Comments</label><br>
+        <textarea name="comments" id="comments" cols="30" rows="10"></textarea><br>
+        <button type="submit" id="submit-review">Submit Review</button>
+      </div>
     </section>
     <!-- End add reviews -->
   </main>
@@ -386,7 +420,7 @@
   <!-- Main javascript file -->
   <script type="text/javascript" src="js/restaurant_info.js"></script>
   <!-- Google Maps -->
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOIm7Fk8IeMSpcN1USyI-wEqxEpk8J4Ys&libraries=places&callback=initMap"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAf7v23vRFR-U23K8iBWn5JLq_Sd6x3Z18&libraries=places&callback=initMap"></script>
   <!-- End scripts -->
 
 </body>

@@ -60,15 +60,30 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
   const name = document.getElementById('restaurant-name');
   name.innerHTML = restaurant.name;
 
+  const favourite = document.getElementById('favourite');
+  var isFavourite = restaurant.is_favorite;
+  console.log(isFavourite);
+  if (isFavourite === "true") {
+    favourite.className = "f_true";
+    favourite.innerHTML = "In Favourites!"
+  } else {
+    favourite.className = "f_false";
+    favourite.innerHTML = "Favourite Me!"
+  }
+
   const address = document.getElementById('restaurant-address');
   address.innerHTML = restaurant.address;
+  var photoId = restaurant.photograph;
+  if (!photoId) {
+    photoId = "10";
+  }
 
   const imageMedium = document.getElementById('medium-restaurant-img');
-  imageMedium.srcset = DBHelper.imageUrlForRestaurant(restaurant)+"-1600_medium.jpg";
+  imageMedium.srcset = DBHelper.imageUrlForRestaurant(photoId)+"-1600_medium.jpg";
 
   const image = document.getElementById('restaurant-img');
-  image.className = 'restaurant-img'
-  image.src = DBHelper.imageUrlForRestaurant(restaurant)+"-600_small.jpg";
+  image.className = 'restaurant-img';
+  image.src = DBHelper.imageUrlForRestaurant(photoId)+"-600_small.jpg";
   image.alt = "Photo of "+restaurant.name+" restaurant";
 
   const cuisine = document.getElementById('restaurant-cuisine');
@@ -79,7 +94,14 @@ fillRestaurantHTML = (restaurant = self.restaurant) => {
     fillRestaurantHoursHTML();
   }
   // fill reviews
-  fillReviewsHTML();
+  DBHelper.fetchReviews(restaurant.id, (error, reviews) => {
+    self.reviews = reviews;
+    if (!reviews) {
+      console.error(error);
+      return;
+    }
+    fillReviewsHTML();
+  });
   
   const idElement = document.getElementById('restaurant-id');
   idElement.value = restaurant.id;
@@ -108,7 +130,7 @@ fillRestaurantHoursHTML = (operatingHours = self.restaurant.operating_hours) => 
 /**
  * Create all reviews HTML and add them to the webpage.
  */
-fillReviewsHTML = (reviews = self.restaurant.reviews) => {
+fillReviewsHTML = (reviews = self.reviews) => {
   const container = document.getElementById('reviews-container');
   const title = document.createElement('h2');
   title.innerHTML = 'Reviews';
@@ -121,6 +143,7 @@ fillReviewsHTML = (reviews = self.restaurant.reviews) => {
     return;
   }
   const ul = document.getElementById('reviews-list');
+  console.log(reviews);
   reviews.forEach(review => {
     ul.appendChild(createReviewHTML(review));
   });
@@ -138,13 +161,21 @@ document.getElementById("submit-review").addEventListener("click", function(){
   var rating = document.getElementById('rating').value;
   var comments = document.getElementById('comments').value;
   var params = {
-    "restaurant_id": restaurantId,
+    "restaurant_id": parseInt(restaurantId),
     "name": username,
     "rating": rating,
     "comments": comments
   };
-  DBHelper.postReview(params);
-  console.log(params);
+  DBHelper.postReview(params,(error,review)=>{
+    if (error) {
+      alert("You are offline. An attempt to submit your review to the server will be made when you are back online.");
+    }
+    const ul = document.getElementById('reviews-list');
+    ul.appendChild(createReviewHTML(review));
+    document.getElementById('user-name').value = "";
+    document.getElementById('rating').value = "1";
+    document.getElementById('comments').value = "";
+  });
 });
 
 /**
@@ -200,3 +231,29 @@ getParameterByName = (name, url) => {
     return '';
   return decodeURIComponent(results[2].replace(/\+/g, ' '));
 }
+
+document.getElementById("favourite").addEventListener("click", function(){
+  const id = getParameterByName('id');
+  var element = document.getElementById("favourite");
+  var f_class = element.className;
+  console.log(f_class);
+  if (f_class === "f_false") {
+    update = "true";
+  } else if (f_class === "f_true") {
+    update = "false"
+  }
+  console.log(update);
+  DBHelper.updateFavourite(id,update,(error,update)=>{
+    if (error) {
+      alert("You are offline. Please try again later.");
+    } else {
+      if (update === "true"){
+        element.className = "f_true";
+        element.innerHTML = "In Favourites!"
+      } else {
+        element.className = "f_false";
+        element.innerHTML = "Favourite Me!"
+      }
+    }
+  });
+})

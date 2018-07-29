@@ -13,14 +13,15 @@ self.addEventListener('install', function(event) {
                 '/js/idb.js',
                 '/js/lazysizes.min.js',
                 '/css/styles-main.css',
-                '/css/styles.css'
+                '/css/styles.css',
+                '/manifest.json'
                 //'/data/restaurants.json'
             ]);
         }),
     );
     event.waitUntil(
       caches.open('OpaqueCache').then(function(cache) {
-        var url = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBOIm7Fk8IeMSpcN1USyI-wEqxEpk8J4Ys&libraries=places&callback=initMap';
+        var url = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyAf7v23vRFR-U23K8iBWn5JLq_Sd6x3Z18&libraries=places&callback=initMap';
         fetch(url, {mode:'no-cors'}).then(function(response) {
             return cache.put(url, response);
         });

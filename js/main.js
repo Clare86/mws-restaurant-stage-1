@@ -140,6 +140,7 @@ if (navigator.serviceWorker) {
   });
 }
 
+
 /**
  * Create restaurant HTML.
  */
@@ -151,12 +152,16 @@ createRestaurantHTML = (restaurant) => {
   console.log("Appending Restaurant");
   const source = document.createElement('source');
   source.media = '(min-width: 800px)';
-  source.setAttribute('data-srcset',DBHelper.imageUrlForRestaurant(restaurant)+"-600_small.jpg");
+  var photoId = restaurant.photograph;
+  if (!photoId) {
+    photoId = "10";
+  }
+  source.setAttribute('data-srcset',DBHelper.imageUrlForRestaurant(photoId)+"-600_small.jpg");
   picture.append(source);
 
   const image = document.createElement('img');
   image.className = 'restaurant-img lazyload';
-  image.setAttribute('data-src',DBHelper.imageUrlForRestaurant(restaurant)+"-250_thumbnail.jpg");
+  image.setAttribute('data-src',DBHelper.imageUrlForRestaurant(photoId)+"-250_thumbnail.jpg");
   image.alt = "Photo of "+restaurant.name+" restaurant";
   picture.append(image);
 
